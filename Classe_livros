@@ -1,0 +1,100 @@
+// Classe Livro (não pública, pois Main será a pública neste arquivo)
+class Livro {
+    // Atributos privados (encapsulamento)
+    private String titulo;
+    private String autor;
+    private int anoPublicacao;
+    private double preco;
+    private boolean disponivel;
+
+    // Construtor
+    public Livro(String titulo, String autor, int anoPublicacao, double preco) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.anoPublicacao = anoPublicacao;
+        this.preco = preco;
+        this.disponivel = true; // Livro começa disponível
+    }
+
+    // Getters
+    public String getTitulo() { return titulo; }
+    public String getAutor() { return autor; }
+    public int getAnoPublicacao() { return anoPublicacao; }
+    public double getPreco() { return preco; }
+    public boolean isDisponivel() { return disponivel; }
+
+    // Setters com validação
+    public void setTitulo(String titulo) {
+        if (titulo != null && !titulo.trim().isEmpty()) {
+            this.titulo = titulo;
+        }
+    }
+
+    public void setPreco(double preco) {
+        if (preco >= 0) {
+            this.preco = preco;
+        }
+    }
+
+    // Métodos de comportamento
+    public void emprestar() {
+        if (disponivel) {
+            disponivel = false;
+            System.out.println("Livro '" + titulo + "' emprestado com sucesso!");
+        } else {
+            System.out.println("Livro '" + titulo + "' não está disponível.");
+        }
+    }
+
+    public void devolver() {
+        if (!disponivel) {
+            disponivel = true;
+            System.out.println("Livro '" + titulo + "' devolvido com sucesso!");
+        } else {
+            System.out.println("O livro '" + titulo + "' já está disponível.");
+        }
+    }
+
+    public int obterIdade(int anoAtual) {
+        return anoAtual - anoPublicacao;
+    }
+
+    public void aplicarDesconto(double percentual) {
+        if (percentual > 0 && percentual <= 100) {
+            preco = preco * (1 - percentual / 100);
+            System.out.println("Desconto aplicado! Novo preço: R$ " + preco);
+        }
+    }
+}
+
+// Classe principal
+public class Main {
+    public static void main(String[] args) {
+
+        // Criando alguns livros de exemplo
+        Livro livro1 = new Livro("O Senhor dos Anéis", "J.R.R. Tolkien", 1954, 99.90);
+        Livro livro2 = new Livro("Dom Casmurro", "Machado de Assis", 1899, 39.90);
+        Livro livro3 = new Livro("Clean Code", "Robert C. Martin", 2008, 120.00);
+
+        // Exibindo informações dos livros
+        System.out.println("📚 Lista de Livros:");
+        System.out.println(livro1.getTitulo() + " - " + livro1.getAutor() + " | Ano: " + livro1.getAnoPublicacao() + " | Preço: R$ " + livro1.getPreco());
+        System.out.println(livro2.getTitulo() + " - " + livro2.getAutor() + " | Ano: " + livro2.getAnoPublicacao() + " | Preço: R$ " + livro2.getPreco());
+        System.out.println(livro3.getTitulo() + " - " + livro3.getAutor() + " | Ano: " + livro3.getAnoPublicacao() + " | Preço: R$ " + livro3.getPreco());
+
+        System.out.println("\n--- Testando funcionalidades ---");
+
+        // Emprestando e devolvendo livros
+        livro1.emprestar();
+        livro1.emprestar(); // Tentando emprestar novamente (deve dar indisponível)
+        livro1.devolver();
+        livro1.devolver(); // Tentando devolver novamente (deve avisar que já está disponível)
+
+        // Aplicando desconto
+        livro3.aplicarDesconto(20); // 20% de desconto
+
+        // Verificando idade dos livros
+        int anoAtual = 2025;
+        System.out.println("O livro '" + livro2.getTitulo() + "' tem " + livro2.obterIdade(anoAtual) + " anos desde sua publicação.");
+    }
+}
